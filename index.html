@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jungle Survival Game</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0a1628; color:#fff; font-family:'Segoe UI',sans-serif; min-height:100vh; }
+  .hero { background:linear-gradient(135deg,#0a2a0a,#1a4a1a,#0a1628);
+          padding:60px 20px; text-align:center; border-bottom:2px solid #ffc800; }
+  .title { font-size:3.5rem; font-weight:900; color:#ffc800;
+           text-shadow:0 0 30px #ffc80088,4px 4px 0 #003300; letter-spacing:2px; }
+  .subtitle { font-size:1.2rem; color:#96d4ff; margin:16px 0 32px; }
+  .badges { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:36px; }
+  .badge { background:#1a3a1a; border:1px solid #ffc800; border-radius:20px;
+           padding:6px 16px; font-size:.85rem; color:#ffc800; }
+  .btn { display:inline-block; background:linear-gradient(135deg,#28a745,#1a7a30);
+         color:#fff; padding:16px 40px; border-radius:12px; font-size:1.1rem;
+         font-weight:700; text-decoration:none; border:2px solid #4cff70;
+         box-shadow:0 0 20px #28a74566; transition:all .2s; margin:8px; }
+  .btn:hover { transform:scale(1.05); box-shadow:0 0 30px #28a745aa; }
+  .btn.secondary { background:linear-gradient(135deg,#1a3a7a,#0a2050);
+                   border-color:#96d4ff; box-shadow:0 0 20px #1a3a7a66; }
+  .features { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+              gap:20px; max-width:1100px; margin:50px auto; padding:0 20px; }
+  .card { background:#0f2040; border:1px solid #1a3a6a; border-radius:14px;
+          padding:24px; transition:border-color .2s; }
+  .card:hover { border-color:#ffc800; }
+  .card h3 { color:#ffc800; font-size:1.1rem; margin-bottom:10px; }
+  .card p  { color:#aac4e0; font-size:.9rem; line-height:1.6; }
+  .controls { max-width:700px; margin:0 auto 50px; padding:0 20px; }
+  .controls h2 { color:#ffc800; text-align:center; margin-bottom:20px; font-size:1.6rem; }
+  table { width:100%; border-collapse:collapse; }
+  th,td { padding:12px 16px; text-align:left; border-bottom:1px solid #1a3a6a; }
+  th { color:#96d4ff; background:#0f2040; }
+  td { color:#cce0f0; }
+  .footer { text-align:center; padding:30px; color:#4a6a8a; border-top:1px solid #1a3a6a; }
+  .footer a { color:#96d4ff; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="title">JUNGLE SURVIVAL</div>
+  <div class="subtitle">5 Levels &bull; Online Multiplayer &bull; Animal Enemies &bull; Gun Combat</div>
+  <div class="badges">
+    <span class="badge">Python + Pygame</span>
+    <span class="badge">Up to 4 Players</span>
+    <span class="badge">5 Characters</span>
+    <span class="badge">3 Lives System</span>
+    <span class="badge">Free to Play</span>
+  </div>
+  <a href="https://github.com/HariChandana27657/JungleSurvivalGame" class="btn">
+    Download Game
+  </a>
+  <a href="https://github.com/HariChandana27657/JungleSurvivalGame#readme" class="btn secondary">
+    How to Play
+  </a>
+</div>
+
+<div class="features">
+  <div class="card">
+    <h3>5 Themed Levels</h3>
+    <p>Jungle Dawn, Lava Cavern, Ice Peaks, Storm Ruins, Shadow Abyss — each with unique weather, obstacles, and increasing difficulty.</p>
+  </div>
+  <div class="card">
+    <h3>Online Multiplayer</h3>
+    <p>Host a room, share a 6-character code with friends anywhere. Up to 4 players. Host approves joiners before the game starts.</p>
+  </div>
+  <div class="card">
+    <h3>Animal Enemies</h3>
+    <p>Cats chase you, Dogs jump over obstacles, Dragons shoot fireballs. Shoot them with your gun or escape.</p>
+  </div>
+  <div class="card">
+    <h3>5 Playable Characters</h3>
+    <p>Boy, Girl, Grandpa, Grandma, Officer — each with a unique look. Enter your name and pick your hero before playing.</p>
+  </div>
+  <div class="card">
+    <h3>Survival Mechanics</h3>
+    <p>3 lives, HP bar, energy bar, ammo system. Collect hearts to restore health. Shield pickups for temporary invincibility.</p>
+  </div>
+  <div class="card">
+    <h3>Gun Combat</h3>
+    <p>Press F or click to shoot. 12 bullets per life shown in the HUD. Gunshot sound, bullet trail effects, and kill scores.</p>
+  </div>
+</div>
+
+<div class="controls">
+  <h2>Controls</h2>
+  <table>
+    <tr><th>Key</th><th>Action</th></tr>
+    <tr><td>A / D &nbsp;or&nbsp; Arrow Keys</td><td>Move left / right</td></tr>
+    <tr><td>SPACE / W / Up Arrow</td><td>Jump</td></tr>
+    <tr><td>F &nbsp;or&nbsp; Left Click</td><td>Shoot</td></tr>
+    <tr><td>ESC</td><td>Pause</td></tr>
+  </table>
+</div>
+
+<div class="footer">
+  Built with Python &amp; Pygame &nbsp;&bull;&nbsp;
+  <a href="https://github.com/HariChandana27657/JungleSurvivalGame">GitHub</a>
+</div>
+</body>
+</html>
