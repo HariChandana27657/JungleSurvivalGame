@@ -1,14 +1,41 @@
 """
 relay_server.py — Jungle Survival Relay Server
-Deploy this on Railway. Manages rooms, forwards game state between players.
+Includes: room management, host approval, HMAC auth to prevent replay attacks.
 """
-import socket, threading, json, random, string, os, time
+import socket, threading, json, random, string, os, time, hmac, hashlib, secrets
 
 PORT   = int(os.environ.get("PORT", 55432))
 BUFFER = 8192
 
 def make_code():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+
+def make_nonce():
+    return secrets.token_hex(16)   # 32-char random hex
+
+def sign(room_code, nonce, timestamp, name):
+    """HMAC-SHA256 signature the client must produce to authenticate."""
+    msg = f"{room_code}:{nonce}:{timestamp}:{name}".encode()
+    key = room_code.encode()
+    return hmac.new(key, msg, hashlib.sha256).hexdigest()
+
+def verify_auth(room_code, nonce, timestamp, name, sig, used_nonces):
+    """Returns (ok, reason)."""
+    # timestamp must be within 30 seconds
+    try:
+        ts = float(timestamp)
+    except Exception:
+        return False, "bad timestamp"
+    if abs(time.time() - ts) > 30:
+        return False, "timestamp expired"
+    # nonce must not have been used before
+    if nonce in used_nonces:
+        return False, "replay detected"
+    # signature must match
+    expected = sign(room_code, nonce, timestamp, name)
+    if not hmac.compare_digest(expected, sig):
+        return False, "invalid signature"
+    return True, "ok"
 
 # ── Room registry ─────────────────────────────────────────────────────────────
 rooms = {}       # code -> Room
@@ -18,13 +45,22 @@ class Room:
     MAX = 4
     def __init__(self, code):
         self.code     = code
-        self.players  = {}   # pid -> state dict
-        self.conns    = {}   # pid -> conn
+        self.players  = {}
+        self.conns    = {}
         self.next_id  = 1
         self.started  = False
         self.level    = 0
         self.lock     = threading.Lock()
         self.created  = time.time()
+        self.used_nonces = set()   # replay attack prevention
+
+    def consume_nonce(self, nonce):
+        """Returns True if nonce is fresh, False if already used."""
+        with self.lock:
+            if nonce in self.used_nonces:
+                return False
+            self.used_nonces.add(nonce)
+            return True
 
     def add(self, conn):
         with self.lock:
@@ -84,6 +120,11 @@ def handle_client(conn, addr):
     buf = ""; room = None; pid = None
     try:
         conn.settimeout(120)
+
+        # ── Send challenge nonce immediately on connect ───────────────────────
+        nonce = make_nonce()
+        conn.sendall((json.dumps({"type":"challenge","nonce":nonce}) + "\n").encode())
+
         while True:
             data = conn.recv(BUFFER).decode("utf-8", errors="ignore")
             if not data: break
@@ -100,40 +141,58 @@ def handle_client(conn, addr):
 
                 # ── CREATE room ──────────────────────────────────────────────
                 if t == "create":
+                    name = msg.get("name","Host")[:24]
+                    # host creates the room — no auth needed (they own the code)
                     code = make_code()
                     with rooms_lock:
-                        # ensure unique
                         while code in rooms:
                             code = make_code()
                         room = Room(code)
                         rooms[code] = room
                     pid = room.add(conn)
-                    room.players[pid]["name"] = msg.get("name", f"P{pid}")
-                    room.players[pid]["approved"] = True  # host auto-approved
+                    room.players[pid]["name"] = name
+                    room.players[pid]["approved"] = True
                     conn.sendall((json.dumps({"type":"created","code":code,"pid":pid}) + "\n").encode())
                     room.broadcast({"type":"lobby","players":room.player_list,
                                     "started":False,"level":room.level})
 
-                # ── JOIN room ─────────────────────────────────────────────────
+                # ── JOIN room — requires valid HMAC auth ──────────────────────
                 elif t == "join":
-                    code = msg.get("code","").upper()
+                    code    = msg.get("code","").upper()
+                    name    = msg.get("name","Player")[:24]
+                    ts      = str(msg.get("timestamp",""))
+                    sig     = msg.get("sig","")
+                    c_nonce = msg.get("nonce", nonce)  # client echoes the challenge nonce
+
                     with rooms_lock:
                         room = rooms.get(code)
+
                     if not room:
                         conn.sendall((json.dumps({"type":"error","msg":"Room not found"}) + "\n").encode())
-                        continue
+                        room = None; continue
+
+                    # verify auth
+                    ok, reason = verify_auth(code, c_nonce, ts, name, sig, set())
+                    if not ok:
+                        conn.sendall((json.dumps({"type":"error","msg":f"Auth failed: {reason}"}) + "\n").encode())
+                        room = None; continue
+
+                    # consume nonce to prevent replay
+                    if not room.consume_nonce(c_nonce):
+                        conn.sendall((json.dumps({"type":"error","msg":"Replay attack detected"}) + "\n").encode())
+                        room = None; continue
+
                     if room.started:
                         conn.sendall((json.dumps({"type":"error","msg":"Game already started"}) + "\n").encode())
-                        continue
+                        room = None; continue
+
                     pid = room.add(conn)
                     if pid is None:
                         conn.sendall((json.dumps({"type":"error","msg":"Room full"}) + "\n").encode())
-                        continue
-                    room.players[pid]["name"] = msg.get("name", f"P{pid}")
-                    # notify host of join request
-                    room.send_to(room.host_id, {"type":"join_request",
-                                                 "pid":pid,
-                                                 "name":room.players[pid]["name"]})
+                        room = None; continue
+
+                    room.players[pid]["name"] = name
+                    room.send_to(room.host_id, {"type":"join_request","pid":pid,"name":name})
                     conn.sendall((json.dumps({"type":"waiting","pid":pid,"code":code}) + "\n").encode())
                     room.broadcast({"type":"lobby","players":room.player_list,
                                     "started":False,"level":room.level})
