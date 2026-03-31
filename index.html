@@ -5,100 +5,155 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jungle Survival Game</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:#0a1628; color:#fff; font-family:'Segoe UI',sans-serif; min-height:100vh; }
-  .hero { background:linear-gradient(135deg,#0a2a0a,#1a4a1a,#0a1628);
-          padding:60px 20px; text-align:center; border-bottom:2px solid #ffc800; }
-  .title { font-size:3.5rem; font-weight:900; color:#ffc800;
-           text-shadow:0 0 30px #ffc80088,4px 4px 0 #003300; letter-spacing:2px; }
-  .subtitle { font-size:1.2rem; color:#96d4ff; margin:16px 0 32px; }
-  .badges { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:36px; }
-  .badge { background:#1a3a1a; border:1px solid #ffc800; border-radius:20px;
-           padding:6px 16px; font-size:.85rem; color:#ffc800; }
-  .btn { display:inline-block; background:linear-gradient(135deg,#28a745,#1a7a30);
-         color:#fff; padding:16px 40px; border-radius:12px; font-size:1.1rem;
-         font-weight:700; text-decoration:none; border:2px solid #4cff70;
-         box-shadow:0 0 20px #28a74566; transition:all .2s; margin:8px; }
-  .btn:hover { transform:scale(1.05); box-shadow:0 0 30px #28a745aa; }
-  .btn.secondary { background:linear-gradient(135deg,#1a3a7a,#0a2050);
-                   border-color:#96d4ff; box-shadow:0 0 20px #1a3a7a66; }
-  .features { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-              gap:20px; max-width:1100px; margin:50px auto; padding:0 20px; }
-  .card { background:#0f2040; border:1px solid #1a3a6a; border-radius:14px;
-          padding:24px; transition:border-color .2s; }
-  .card:hover { border-color:#ffc800; }
-  .card h3 { color:#ffc800; font-size:1.1rem; margin-bottom:10px; }
-  .card p  { color:#aac4e0; font-size:.9rem; line-height:1.6; }
-  .controls { max-width:700px; margin:0 auto 50px; padding:0 20px; }
-  .controls h2 { color:#ffc800; text-align:center; margin-bottom:20px; font-size:1.6rem; }
-  table { width:100%; border-collapse:collapse; }
-  th,td { padding:12px 16px; text-align:left; border-bottom:1px solid #1a3a6a; }
-  th { color:#96d4ff; background:#0f2040; }
-  td { color:#cce0f0; }
-  .footer { text-align:center; padding:30px; color:#4a6a8a; border-top:1px solid #1a3a6a; }
-  .footer a { color:#96d4ff; text-decoration:none; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a1628;color:#fff;font-family:'Segoe UI',sans-serif;min-height:100vh}
+.hero{background:linear-gradient(135deg,#0a2a0a 0%,#1a4a1a 50%,#0a1628 100%);
+      padding:70px 20px 50px;text-align:center;border-bottom:3px solid #ffc800}
+.title{font-size:clamp(2rem,6vw,4rem);font-weight:900;color:#ffc800;
+       text-shadow:0 0 40px #ffc80099,4px 4px 0 #003300;letter-spacing:3px;margin-bottom:12px}
+.subtitle{font-size:1.1rem;color:#96d4ff;margin-bottom:28px}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:36px}
+.badge{background:#1a3a1a;border:1px solid #ffc800;border-radius:20px;
+       padding:5px 14px;font-size:.82rem;color:#ffc800}
+.btn{display:inline-block;padding:15px 38px;border-radius:12px;font-size:1rem;
+     font-weight:700;text-decoration:none;margin:8px;transition:all .2s;cursor:pointer}
+.btn-green{background:linear-gradient(135deg,#28a745,#1a7a30);color:#fff;
+           border:2px solid #4cff70;box-shadow:0 0 20px #28a74555}
+.btn-green:hover{transform:scale(1.06);box-shadow:0 0 35px #28a745aa}
+.btn-blue{background:linear-gradient(135deg,#1a3a7a,#0a2050);color:#fff;
+          border:2px solid #96d4ff;box-shadow:0 0 20px #1a3a7a55}
+.btn-blue:hover{transform:scale(1.06);box-shadow:0 0 35px #1a3a7aaa}
+.section{max-width:1100px;margin:0 auto;padding:50px 20px}
+.section h2{color:#ffc800;font-size:1.8rem;text-align:center;margin-bottom:30px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.card{background:#0f2040;border:1px solid #1a3a6a;border-radius:14px;
+      padding:22px;transition:border-color .2s,transform .2s}
+.card:hover{border-color:#ffc800;transform:translateY(-3px)}
+.card h3{color:#ffc800;font-size:1rem;margin-bottom:10px}
+.card p{color:#aac4e0;font-size:.88rem;line-height:1.6}
+.how{max-width:750px;margin:0 auto;padding:0 20px 50px}
+.how h2{color:#ffc800;font-size:1.8rem;text-align:center;margin-bottom:24px}
+.step{display:flex;gap:16px;margin-bottom:20px;align-items:flex-start}
+.step-num{background:#ffc800;color:#000;font-weight:900;border-radius:50%;
+          width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+          flex-shrink:0;font-size:.95rem}
+.step-text{color:#cce0f0;line-height:1.6;padding-top:6px}
+.step-text strong{color:#fff}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid #1a3a6a}
+th{color:#96d4ff;background:#0f2040;font-size:.9rem}
+td{color:#cce0f0;font-size:.9rem}
+.footer{text-align:center;padding:28px;color:#4a6a8a;border-top:1px solid #1a3a6a;font-size:.9rem}
+.footer a{color:#96d4ff;text-decoration:none}
+.tag{display:inline-block;background:#1a3060;border:1px solid #3a60a0;
+     border-radius:6px;padding:2px 8px;font-size:.78rem;color:#96d4ff;margin-left:6px}
 </style>
 </head>
 <body>
+
 <div class="hero">
   <div class="title">JUNGLE SURVIVAL</div>
-  <div class="subtitle">5 Levels &bull; Online Multiplayer &bull; Animal Enemies &bull; Gun Combat</div>
+  <div class="subtitle">A 2D survival platformer — 5 levels, online multiplayer, animal enemies &amp; gun combat</div>
   <div class="badges">
     <span class="badge">Python + Pygame</span>
-    <span class="badge">Up to 4 Players</span>
+    <span class="badge">Up to 4 Players Online</span>
     <span class="badge">5 Characters</span>
     <span class="badge">3 Lives System</span>
-    <span class="badge">Free to Play</span>
+    <span class="badge">Free</span>
   </div>
-  <a href="https://github.com/HariChandana27657/JungleSurvivalGame" class="btn">
-    Download Game
-  </a>
-  <a href="https://github.com/HariChandana27657/JungleSurvivalGame#readme" class="btn secondary">
-    How to Play
-  </a>
+  <a href="https://github.com/HariChandana27657/JungleSurvivalGame/archive/refs/heads/main.zip"
+     class="btn btn-green">Download Game (ZIP)</a>
+  <a href="https://github.com/HariChandana27657/JungleSurvivalGame"
+     class="btn btn-blue">View on GitHub</a>
 </div>
 
-<div class="features">
-  <div class="card">
-    <h3>5 Themed Levels</h3>
-    <p>Jungle Dawn, Lava Cavern, Ice Peaks, Storm Ruins, Shadow Abyss — each with unique weather, obstacles, and increasing difficulty.</p>
-  </div>
-  <div class="card">
-    <h3>Online Multiplayer</h3>
-    <p>Host a room, share a 6-character code with friends anywhere. Up to 4 players. Host approves joiners before the game starts.</p>
-  </div>
-  <div class="card">
-    <h3>Animal Enemies</h3>
-    <p>Cats chase you, Dogs jump over obstacles, Dragons shoot fireballs. Shoot them with your gun or escape.</p>
-  </div>
-  <div class="card">
-    <h3>5 Playable Characters</h3>
-    <p>Boy, Girl, Grandpa, Grandma, Officer — each with a unique look. Enter your name and pick your hero before playing.</p>
-  </div>
-  <div class="card">
-    <h3>Survival Mechanics</h3>
-    <p>3 lives, HP bar, energy bar, ammo system. Collect hearts to restore health. Shield pickups for temporary invincibility.</p>
-  </div>
-  <div class="card">
-    <h3>Gun Combat</h3>
-    <p>Press F or click to shoot. 12 bullets per life shown in the HUD. Gunshot sound, bullet trail effects, and kill scores.</p>
+<div class="section">
+  <h2>Features</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>5 Themed Levels</h3>
+      <p>Jungle Dawn, Lava Cavern, Ice Peaks, Storm Ruins, Shadow Abyss — each with unique weather effects, obstacles, and increasing difficulty.</p>
+    </div>
+    <div class="card">
+      <h3>Online Multiplayer</h3>
+      <p>Host a room, share a 6-character code. Friends join from anywhere. Host approves players before the game starts. Up to 4 players.</p>
+    </div>
+    <div class="card">
+      <h3>Animal Enemies</h3>
+      <p>Cats chase you on the ground. Dogs jump over obstacles. Dragons shoot fireballs every 2 seconds. Shoot them or escape.</p>
+    </div>
+    <div class="card">
+      <h3>5 Playable Characters</h3>
+      <p>Boy, Girl, Grandpa, Grandma, Officer — each visually unique. Enter your name and pick your hero on the character select screen.</p>
+    </div>
+    <div class="card">
+      <h3>Survival Mechanics</h3>
+      <p>3 lives, HP bar, energy bar that drains over time. Collect hearts to restore health and ammo. Shield pickups for invincibility.</p>
+    </div>
+    <div class="card">
+      <h3>Gun Combat</h3>
+      <p>Press F or left-click to shoot. 12 bullets per life shown in the HUD. Gunshot sound, glowing bullet trail, and kill scores.</p>
+    </div>
+    <div class="card">
+      <h3>Weather Effects</h3>
+      <p>Rain in Jungle, lightning in Storm, snowflakes in Ice, rising embers in Lava, purple mist in Abyss.</p>
+    </div>
+    <div class="card">
+      <h3>World Map</h3>
+      <p>Parchment-style level select map. Levels unlock as you progress. Hover to see difficulty info before entering.</p>
+    </div>
   </div>
 </div>
 
-<div class="controls">
-  <h2>Controls</h2>
+<div class="how">
+  <h2>How to Run</h2>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-text">
+      <strong>Download Python 3.11+</strong> from
+      <a href="https://python.org" style="color:#96d4ff">python.org</a> if you don't have it.
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-text">
+      <strong>Download the game ZIP</strong> using the button above, then extract it.
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-text">
+      <strong>Open a terminal</strong> in the extracted folder and run:<br>
+      <code style="background:#0f2040;padding:4px 10px;border-radius:5px;color:#ffc800">
+        pip install -r requirements.txt
+      </code>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-text">
+      <strong>Start the game:</strong><br>
+      <code style="background:#0f2040;padding:4px 10px;border-radius:5px;color:#ffc800">
+        python -B game.py
+      </code>
+    </div>
+  </div>
+
+  <h2 style="margin-top:40px">Controls</h2>
   <table>
     <tr><th>Key</th><th>Action</th></tr>
-    <tr><td>A / D &nbsp;or&nbsp; Arrow Keys</td><td>Move left / right</td></tr>
-    <tr><td>SPACE / W / Up Arrow</td><td>Jump</td></tr>
+    <tr><td>A / D &nbsp;or&nbsp; ← →</td><td>Move</td></tr>
+    <tr><td>SPACE / W / ↑</td><td>Jump</td></tr>
     <tr><td>F &nbsp;or&nbsp; Left Click</td><td>Shoot</td></tr>
     <tr><td>ESC</td><td>Pause</td></tr>
   </table>
 </div>
 
 <div class="footer">
-  Built with Python &amp; Pygame &nbsp;&bull;&nbsp;
+  Built with Python &amp; Pygame &nbsp;|&nbsp;
   <a href="https://github.com/HariChandana27657/JungleSurvivalGame">GitHub</a>
+  &nbsp;|&nbsp; Multiplayer relay hosted on Render
 </div>
+
 </body>
 </html>
