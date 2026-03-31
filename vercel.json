@@ -1,8 +1,9 @@
 {
   "version": 2,
+  "framework": null,
+  "buildCommand": "",
   "outputDirectory": ".",
-  "routes": [
-    { "src": "/", "dest": "/index.html" },
-    { "src": "/(.*)", "dest": "/$1" }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
