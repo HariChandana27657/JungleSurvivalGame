@@ -2021,9 +2021,7 @@ class Game:
                             self.mp_server=MPServer()
                             self.mp_server.start()
                             self.mp_is_host=True
-                            name=self.player_name if hasattr(self,"player_name") else "Host"
-                            self.mp_client=MPClient("127.0.0.1", PORT, name)
-                            self.mp_client.connect()
+                            self.mp_client=None   # host uses mp_server directly
                             self.state=GS.MP_HOST
                         elif i==1: # Join
                             self.mp_join_input=""; self.mp_join_error=""
@@ -2120,7 +2118,10 @@ class Game:
 
         # MP_LOBBY: watch for server start signal
         if self.state==GS.MP_LOBBY:
-            if self.mp_client and self.mp_client.started:
+            if self.mp_is_host:
+                # host controls start directly — nothing to poll
+                pass
+            elif self.mp_client and self.mp_client.started:
                 self.level=self.mp_client.level
                 self._init_level(); self.state=GS.MP_PLAYING
             return
@@ -2332,7 +2333,8 @@ class Game:
         if self.state==GS.MP_LOBBY:
             lobby=self.mp_server.player_list if self.mp_is_host else \
                   (self.mp_client.lobby_list if self.mp_client else [])
-            my_id=self.mp_client.my_id if self.mp_client else 1
+            my_id=1 if self.mp_is_host else \
+                  (self.mp_client.my_id if self.mp_client else 1)
             pending=self.mp_server.pending_requests if self.mp_is_host and self.mp_server else []
             approve_btns=self.mp_approve_btns[:len(pending)] if self.mp_is_host else []
             reject_btns =self.mp_reject_btns[:len(pending)]  if self.mp_is_host else []
